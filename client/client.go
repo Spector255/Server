@@ -1,10 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"net"
-	"encoding/binary"
 	"bytes"
+	"encoding/binary"
+	"fmt"
+	"math/rand"
+	"net"
+	"time"
 )
 
 func main() {
@@ -14,20 +16,25 @@ func main() {
 		return
 	}
 
-	var data struct {
-		L float64
-		Cnt int32
+	var cord struct {
+		X int32
+		Y int32
 	}
-	data.L = 325.54
-	data.Cnt = 34
+	for {
 
-	var buf bytes.Buffer
-	err = binary.Write(&buf, binary.LittleEndian, data)
+		cord.X = int32(rand.Intn(100))
+		cord.Y = int32(rand.Intn(100))
+		
+		time.Sleep(1 * time.Second)
 
-	_, err = conn.Write(buf.Bytes())
-	if err != nil {
-		fmt.Println(err)
-		return
+		var buf bytes.Buffer
+		err = binary.Write(&buf, binary.LittleEndian, cord)
+
+		_, err = conn.Write(buf.Bytes())
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		conn.Close()
 	}
-	conn.Close()
 }
